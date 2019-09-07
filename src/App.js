@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route } from "react-router-dom";
 import data from "./data";
 import ProductContext from "./contexts/ProductContext";
@@ -18,6 +18,23 @@ function App() {
   const removeItem = id => {
     setCart(cart.filter(item => item.id !== id));
   };
+
+  useEffect(() => {
+    const cartData = JSON.parse(localStorage.getItem("cartData"));
+    if (cartData) {
+      setCart(cartData);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (cart.length === 0) {
+      if (localStorage.getItem("cartData")) {
+        localStorage.removeItem("cartData");
+      }
+    } else {
+      localStorage.setItem("cartData", JSON.stringify(cart));
+    }
+  }, [cart]);
 
   return (
     <div className="App">
